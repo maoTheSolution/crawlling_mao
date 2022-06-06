@@ -67,8 +67,5 @@ def run():
         installLibrary(filterLibraries())
         print("now all installed")
 
-
-    # installLibrary()
-
 if __name__ == "__main__":
     run()
