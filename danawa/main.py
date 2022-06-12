@@ -1,26 +1,41 @@
 import libraries
+from bs4 import BeautifulSoup
 from selenium import webdriver as wd
 from selenium.webdriver.chrome.options import Options
 import chromedriver_autoinstaller
 
-# from selenium.webdriver.chrome.service import Service
-# from webdriver_manager.chrome import ChromeDriverManager
+def readWebpage():
+    '''
+    open the url with Chrome and read the page source without a browser open
+    '''
+    global option, driver
+    url = 'https:www.danawa.com'
+    chromedriver_autoinstaller.install()        # install chromdriver_autoinstaller
+    option = wd.ChromeOptions()                 # open a webpage without a broswer open
+    option.add_argument('headless')
+    driver = wd.Chrome(options=option)
+    driver.get(url)                             # request to open the danawa webpage
+    driver.implicitly_wait(3)                   # wait 3 seconds to load the page
 
-# from selenium import webdriver
-# from selenium.webdriver import ActionChains
+def htmlParseUsingSoup():
+    '''
+    parse the page_source with beautifulsoup4
+    '''
+    global option, driver, bfSoup
+    html = driver.page_source 
+    bfSoup = BeautifulSoup(html, 'html.parser')
 
-# from selenium.webdriver.common.keys import Keys
-# from selenium.webdriver.common.by import By
+def searchCPU():
+    '''
+    collect cpu data   
+    '''
+    global bfSoup
+    bfSoup
 
-# from selenium.webdriver.support import expected_conditions as EC
-# from selenium.webdriver.support.ui import Select
-# from selenium.webdriver.support.ui import WebDriverWait
+
+def run():
+    readWebpage()
+    htmlParseUsingSoup()
 
 if __name__ == "__main__":
-    # driver = wd.Chrome("/home/adam/Documents/github_mao/crawlling_mao/danawa/seleniumDriver/linux/chrome/102/chromedriver")
-    # driver = wd.Chrome(service=Service(ChromeDriverManager().install()))
-    
-    chromedriver_autoinstaller.install()
-    driver = wd.Chrome(options=Options().add_argument('headless'))
-    driver.implicitly_wait(3)
-    driver.get('https://www.danawa.com/')
+    run()
