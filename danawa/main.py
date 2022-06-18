@@ -23,9 +23,7 @@ def htmlParseUsingSoup():
     '''
     global option, driver, bfSoup
     html = driver.page_source 
-    bfSoup = BeautifulSoup(html, 'html.parser')
-
-    print(bfSoup)
+    bfSoup = BeautifulSoup(html, 'html.parser') 
 
 def searchCPU():
     '''
