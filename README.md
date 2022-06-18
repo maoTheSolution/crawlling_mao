@@ -13,3 +13,5 @@
 ### --> 저장 장소는 사용자 정의로 한다
 ### --> 필요한 환경설치를 위하여 beautifulsout4, selenium 우선 설치<br/>
 
+## * ERROR HANDLE
+### -->  CERTIFICATE_VERIFY_FAILED : https://stackoverflow.com/questions/68275857/urllib-error-urlerror-urlopen-error-ssl-certificate-verify-failed-certifica

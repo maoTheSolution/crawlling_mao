@@ -9,7 +9,7 @@ def readWebpage():
     open the url with Chrome and read the page source without a browser open
     '''
     global option, driver
-    url = 'https:www.danawa.com'
+    url = 'https://www.danawa.com/'
     chromedriver_autoinstaller.install()        # install chromdriver_autoinstaller
     option = wd.ChromeOptions()                 # open a webpage without a broswer open
     option.add_argument('headless')
@@ -25,17 +25,19 @@ def htmlParseUsingSoup():
     html = driver.page_source 
     bfSoup = BeautifulSoup(html, 'html.parser')
 
+    print(bfSoup)
+
 def searchCPU():
     '''
     collect cpu data   
     '''
     global bfSoup
-    bfSoup
 
 
 def run():
     readWebpage()
     htmlParseUsingSoup()
+
 
 if __name__ == "__main__":
     run()
