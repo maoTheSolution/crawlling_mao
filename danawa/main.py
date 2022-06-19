@@ -15,8 +15,9 @@ def readWebpage():
     url = 'https://www.danawa.com/'
     chromedriver_autoinstaller.install()        # install chromdriver_autoinstaller
     option = wd.ChromeOptions()                 # open a webpage without a broswer open
-    option.add_argument('headless')
-    driver = wd.Chrome(options=option)
+    # option.add_argument('headless')
+    # driver = wd.Chrome(options=option)
+    driver = wd.Chrome()
     driver.get(url)                             # request to open the danawa webpage
     driver.implicitly_wait(3)                   # wait 3 seconds to load the page
 
@@ -33,6 +34,8 @@ def searchCPU():
     collect cpu data   
     '''
     global bfSoup, driver
+    element = driver.find_element_by_id('selectionLayer')
+    element.click()
     # WebDriverWait(driver,3).until(EC.presence_of_element_located((By.XPATH,'//*[@id="categoryUnit97"]/ul/li[1]/a'))).click()
     # html = driver.page_source 
     # bfSoup = BeautifulSoup(html, 'html.parser')
@@ -43,7 +46,7 @@ def searchCPU():
 
 def run():
     readWebpage()
-    htmlParseUsingSoup()
+    # htmlParseUsingSoup()
     searchCPU()
 
 
