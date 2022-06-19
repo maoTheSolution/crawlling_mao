@@ -3,6 +3,9 @@ from bs4 import BeautifulSoup
 from selenium import webdriver as wd
 from selenium.webdriver.chrome.options import Options
 import chromedriver_autoinstaller
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
 def readWebpage():
     '''
@@ -23,18 +26,25 @@ def htmlParseUsingSoup():
     '''
     global option, driver, bfSoup
     html = driver.page_source 
-    bfSoup = BeautifulSoup(html, 'html.parser') 
+    bfSoup = BeautifulSoup(html, 'html.parser')
 
 def searchCPU():
     '''
     collect cpu data   
     '''
-    global bfSoup
+    global bfSoup, driver
+    # WebDriverWait(driver,3).until(EC.presence_of_element_located((By.XPATH,'//*[@id="categoryUnit97"]/ul/li[1]/a'))).click()
+    # html = driver.page_source 
+    # bfSoup = BeautifulSoup(html, 'html.parser')
+
+    # print(bfSoup.prettify())
+
 
 
 def run():
     readWebpage()
     htmlParseUsingSoup()
+    searchCPU()
 
 
 if __name__ == "__main__":
