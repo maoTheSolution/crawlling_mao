@@ -4,8 +4,6 @@ from selenium import webdriver as wd
 from selenium.webdriver.chrome.options import Options
 import chromedriver_autoinstaller
 from selenium.webdriver.common.by import By
-# from selenium.webdriver.support.ui import WebDriverWait
-# from selenium.webdriver.support import expected_conditions as EC
 
 def readWebpage(url):
     '''
@@ -46,14 +44,6 @@ def searchCPU():
         price = driver.find_element(by=By.XPATH, value='//*[@id="estimateMainProduct"]/div/div[2]/div[2]/table/tbody/tr['+ str(each) +']/td[3]/p/span')
         cpu[cpuTitleFilter(title.text)] = strIntoNumber(price.text)
 
-    # print('PageContents:{}'.format(driver.page_source))
-
-
-    # WebDriverWait(driver,3).until(EC.presence_of_element_located((By.XPATH,'//*[@id="categoryUnit97"]/ul/li[1]/a'))).click()
-    # html = driver.page_source 
-    # bfSoup = BeautifulSoup(html, 'html.parser')
-
-    # print(bfSoup.prettify())
 
 def displayCPU():
     '''
@@ -84,7 +74,7 @@ def cpuTitleFilter(name):
             break
         newName = newName + each
     
-    return newName[0:-2]
+    return newName[0:-1]
 
 def intelOnly():
     ''' 
@@ -123,6 +113,47 @@ def ryzenOnly():
             ryzen[each] = cpu[each]
 
 
+def findYourCPUs(company, howGood):
+    '''
+    return a list of the cpu titles that satisfy the needs
+    howGood : i9, i7, i5 or i3
+            : 라이젠7,  라이젠7 or 라이젠3    
+    '''
+    global intel, ryzen 
+    output = []
+
+    if(company== '인텔'):
+        for each in intel.keys():
+            if(howGood in each):
+                output.append(each)
+    else:
+        for each in ryzen.keys():
+            if(howGood in each):
+                output.append(each)
+
+    return output
+
+
+def findTheCheapestCPU(sampleL):
+    '''
+    receive a list of cpu tiltes and return a cheapest one taht satisfy the requirements
+    '''
+    global cpu
+
+    temp = ''
+    tempPrice = 0
+    for each in sampleL:
+        if(temp == ''):
+            temp = each
+            tempPrice = cpu[each]
+        else :
+            if(tempPrice > cpu[each]):
+                temp = each
+                tempPrice = cpu[each]
+    
+    return temp
+
+
 def run():
     readWebpage('https://www.danawa.com/')
     # htmlParseUsingSoup()
@@ -132,6 +163,10 @@ def run():
     ryzenOnly()
     displayIntelOnly()
     displayRyzen()
+    print(findYourCPUs('인텔', 'i7'))
+    print(findTheCheapestCPU(findYourCPUs('인텔', 'i7')))
+    print(findYourCPUs('AMD', '라이젠7'))
+    print(findTheCheapestCPU(findYourCPUs('AMD', '라이젠7')))
 
 if __name__ == "__main__":
     run()
