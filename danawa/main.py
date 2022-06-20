@@ -43,7 +43,7 @@ def searchCPU():
     for each in range(1, 32):
         title = driver.find_element(by=By.XPATH, value='//*[@id="estimateMainProduct"]/div/div[2]/div[2]/table/tbody/tr['+ str(each) + ']/td[2]/p/a')
         price = driver.find_element(by=By.XPATH, value='//*[@id="estimateMainProduct"]/div/div[2]/div[2]/table/tbody/tr['+ str(each) +']/td[3]/p/span')
-        cpu[title.text] = price.text
+        cpu[title.text] = strIntoNumber(price.text)
 
     for each in cpu.items():
         print(each)
@@ -57,6 +57,16 @@ def searchCPU():
 
     # print(bfSoup.prettify())
 
+def strIntoNumber(number):
+    '''
+    string into number and return it
+    '''
+    num = ''
+    for each in number:
+        if(each != ","):
+            num = num + each
+
+    return int(num)
 
 
 def run():
