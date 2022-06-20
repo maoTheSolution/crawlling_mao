@@ -86,14 +86,52 @@ def cpuTitleFilter(name):
     
     return newName[0:-2]
 
+def intelOnly():
+    ''' 
+    collect only intel cpus
+    '''
+    global intel, cpu
+    intel = dict()
+    for each in cpu.keys():
+        if('인텔' in each):
+            intel[each] = cpu[each]
+
+def displayIntelOnly():
+    '''
+    display Intel cpu only
+    '''
+    global intel
+    for each in intel.items():
+        print(each)
+
+def displayRyzen():
+    '''
+    display Ryzen only
+    '''
+    global ryzen
+    for each in ryzen.items():
+        print(each)
+
+def ryzenOnly():
+    '''
+    collect only ryzen cpus
+    '''
+    global ryzen, cpu
+    ryzen = dict()
+    for each in cpu.keys():
+        if('AMD' in each):
+            ryzen[each] = cpu[each]
 
 
 def run():
     readWebpage('https://www.danawa.com/')
     # htmlParseUsingSoup()
     searchCPU()
-    displayCPU()
-
+    # displayCPU()
+    intelOnly()
+    ryzenOnly()
+    displayIntelOnly()
+    displayRyzen()
 
 if __name__ == "__main__":
     run()
