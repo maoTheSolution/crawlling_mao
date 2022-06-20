@@ -1,3 +1,4 @@
+from email import charset
 import libraries
 from bs4 import BeautifulSoup
 from selenium import webdriver as wd
@@ -153,20 +154,35 @@ def findTheCheapestCPU(sampleL):
     
     return temp
 
+def readChart():
+    '''
+    read a chart text file and return the data as a dictionary
+    '''
+    global chart, programTable
+    programTable = dict()
+    chart = open('./chart.txt', 'r').readlines()
+    for each in chart:
+        eachList = each.rstrip().split(',')
+        
+
+
+        
+
 
 def run():
-    readWebpage('https://www.danawa.com/')
+    # readWebpage('https://www.danawa.com/')
     # htmlParseUsingSoup()
-    searchCPU()
+    # searchCPU()
     # displayCPU()
-    intelOnly()
-    ryzenOnly()
-    displayIntelOnly()
-    displayRyzen()
-    print(findYourCPUs('인텔', 'i7'))
-    print(findTheCheapestCPU(findYourCPUs('인텔', 'i7')))
-    print(findYourCPUs('AMD', '라이젠7'))
-    print(findTheCheapestCPU(findYourCPUs('AMD', '라이젠7')))
+    # intelOnly()
+    # ryzenOnly()
+    # displayIntelOnly()
+    # displayRyzen()
+    # print(findYourCPUs('인텔', 'i7'))
+    # print(findTheCheapestCPU(findYourCPUs('인텔', 'i7')))
+    # print(findYourCPUs('AMD', '라이젠7'))
+    # print(findTheCheapestCPU(findYourCPUs('AMD', '라이젠7')))
+    readChart()
 
 if __name__ == "__main__":
     run()
