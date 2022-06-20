@@ -44,7 +44,7 @@ def searchCPU():
     for each in range(1, rows):
         title = driver.find_element(by=By.XPATH, value='//*[@id="estimateMainProduct"]/div/div[2]/div[2]/table/tbody/tr['+ str(each) + ']/td[2]/p/a')
         price = driver.find_element(by=By.XPATH, value='//*[@id="estimateMainProduct"]/div/div[2]/div[2]/table/tbody/tr['+ str(each) +']/td[3]/p/span')
-        cpu[title.text] = strIntoNumber(price.text)
+        cpu[cpuTitleFilter(title.text)] = strIntoNumber(price.text)
 
     # print('PageContents:{}'.format(driver.page_source))
 
@@ -73,6 +73,19 @@ def strIntoNumber(number):
             num = num + each
 
     return int(num)
+
+def cpuTitleFilter(name):
+    '''
+    get rid of the parenthsis after parts
+    '''
+    newName = ''
+    for each in name:
+        if(each == '('):
+            break
+        newName = newName + each
+    
+    return newName[0:-2]
+
 
 
 def run():
