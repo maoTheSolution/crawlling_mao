@@ -1,4 +1,3 @@
-from email import charset
 import libraries
 from bs4 import BeautifulSoup
 from selenium import webdriver as wd
@@ -13,18 +12,16 @@ def readWebpage(url):
     global option, driver
     chromedriver_autoinstaller.install()        # install chromdriver_autoinstaller
     option = wd.ChromeOptions()                 # open a webpage without a broswer open
-    # option.add_argument('headless')
-    # driver = wd.Chrome(options=option)
-    driver = wd.Chrome()
+    option.add_argument('headless')
+    driver = wd.Chrome(options=option)
+    # driver = wd.Chrome()
     driver.get(url)                             # request to open the danawa webpage
     driver.implicitly_wait(5)                   # wait 30 seconds to load the page. If it ends early, move on and save time.
-
     element = driver.find_element(by=By.XPATH, value='//*[@id="danawa_menubar"]/div[2]/a[3]') # open a component page 
     element.click()
     parent = driver.window_handles[0]            # set the current driver as parent
     child = driver.window_handles[1]             # set the new tab a s a child
     driver.switch_to.window(child)               # move to the child 
-
 def htmlParseUsingSoup():
     '''
     parse the page_source with beautifulsoup4
@@ -41,10 +38,11 @@ def searchCPU():
     cpu = dict()
     rows = len(driver.find_elements(by=By.XPATH, value='//*[@id="estimateMainProduct"]/div/div[2]/div[2]/table/tbody/tr'))
     for each in range(1, rows):
-        title = driver.find_element(by=By.XPATH, value='//*[@id="estimateMainProduct"]/div/div[2]/div[2]/table/tbody/tr['+ str(each) + ']/td[2]/p/a')
-        price = driver.find_element(by=By.XPATH, value='//*[@id="estimateMainProduct"]/div/div[2]/div[2]/table/tbody/tr['+ str(each) +']/td[3]/p/span')
-        cpu[cpuTitleFilter(title.text)] = strIntoNumber(price.text)
-
+        temp = driver.find_element(by=By.XPATH, value='//*[@id="estimateMainProduct"]/div/div[2]/div[2]/table/tbody/tr['+ str(each) + ']/td[3]/p')
+        if(temp.text != '판매준비'):
+            title = driver.find_element(by=By.XPATH, value='//*[@id="estimateMainProduct"]/div/div[2]/div[2]/table/tbody/tr['+ str(each) + ']/td[2]/p/a')
+            price = driver.find_element(by=By.XPATH, value='//*[@id="estimateMainProduct"]/div/div[2]/div[2]/table/tbody/tr['+ str(each) + ']/td[3]/p/span')    
+            cpu[cpuTitleFilter(title.text)] = strIntoNumber(price.text)
 
 def displayCPU():
     '''
@@ -95,7 +93,7 @@ def displayIntelOnly():
     for each in intel.items():
         print(each)
 
-def displayRyzen():
+def displayRyzenOnly():
     '''
     display Ryzen only
     '''
@@ -160,29 +158,87 @@ def readChart():
     '''
     global chart, programTable
     programTable = dict()
-    chart = open('./chart.txt', 'r').readlines()
+    chart = open('./chart.txt', 'r', encoding='UTF8').readlines()
     for each in chart:
-        eachList = each.rstrip().split(',')
-        
+        eachList = each.rstrip('\n').split(',')
+        programTable[eachList[0]] = eachList[1:]
 
+def chooseProgram():
+    '''
+    choose your biggest purpose of using a computer 
+    '''
+    output = input("choose a program you want to use : 1. 프리미어 프로\t2.포토샵\t3.스타크래프트2\t4.오버워치\t5.문서작성")
+    if(output == '1'):
+        return '프리미어 프로'
+    elif(output == '2'):
+        return '포토샵'
+    elif(output == '3'):
+        return '스타크래프트2'
+    elif(output == '4'):
+        return '오버워치'
+    elif(output == '5'):
+        return '문서작성'
+    else:
+        print("wrong optiong. please start it over")
+        return -1
 
-        
+def chooseCompany():
+    '''
+    select your favorite cup company
+    '''
+    output = input('Which company do you prefer? 1.Intel\t2.AMD')
+    if(output == '1'):
+        return '인텔'
+    elif(output == '2'):
+        return 'AMD'
+    else: 
+        print('wrong input. start it over')
+        return -1
+
+def returnHowGood():
+    '''
+    based on your favorite company, it returns a proper cpu level
+    '''
+    global programTable, company, program
+    if(company == '인텔'):
+        return programTable[program][0]
+    else:
+        return programTable[program][1]
+
+def userQnA():
+    '''
+    QnA for the users
+    '''
+    global company, program
+    company = chooseCompany()
+    program = chooseProgram()
+
+def displayResult():
+    '''
+    display the result at the end for the users
+    '''
+    global company, cpu
+    print("구매 가능한 목록  : ", findYourCPUs(company, returnHowGood()))
+    print(findTheCheapestCPU(findYourCPUs(company, returnHowGood())), end='\t\t')
+    print(cpu[findTheCheapestCPU(findYourCPUs(company, returnHowGood()))], "원")
 
 
 def run():
-    # readWebpage('https://www.danawa.com/')
+    global driver
+    readChart()
+    userQnA()
+    readWebpage('https://www.danawa.com/')
     # htmlParseUsingSoup()
-    # searchCPU()
+    searchCPU()
     # displayCPU()
-    # intelOnly()
-    # ryzenOnly()
+    intelOnly()
+    ryzenOnly()
+    # displayIntelOnly()
+    # displayRyzenOnly()
+    displayResult()
     # displayIntelOnly()
     # displayRyzen()
-    # print(findYourCPUs('인텔', 'i7'))
-    # print(findTheCheapestCPU(findYourCPUs('인텔', 'i7')))
-    # print(findYourCPUs('AMD', '라이젠7'))
-    # print(findTheCheapestCPU(findYourCPUs('AMD', '라이젠7')))
-    readChart()
+    driver.close()
 
 if __name__ == "__main__":
     run()
